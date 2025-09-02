@@ -1,6 +1,6 @@
 {
   "name": "vibus-core",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Lightweight event bus implementation for JS",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -31,10 +31,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/vibus-core.git"
+    "url": "https://github.com/RzayevTamerlan/vibus-core.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/vibus-core/issues"
+    "url": "https://github.com/RzayevTamerlan/vibus-core/issues"
   },
   "keywords": [
     "event-bus",

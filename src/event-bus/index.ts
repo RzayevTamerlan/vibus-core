@@ -15,19 +15,19 @@ export class EventBusImpl implements EventBus {
 
   on<T = any>(key: EventKey, handler: EventHandler<T>): () => void {
     this.validateHandler(handler);
-    
+
     if (!this.handlers.has(key)) {
       this.handlers.set(key, new Set());
     }
-    
+
     const handlers = this.handlers.get(key)!;
-    
+
     if (this.config.maxListeners && handlers.size >= this.config.maxListeners) {
       console.warn(`Event "${String(key)}" has exceeded the maximum listeners (${this.config.maxListeners})`);
     }
-    
+
     handlers.add(handler);
-    
+
     return () => this.off(key, handler);
   }
 
@@ -39,21 +39,26 @@ export class EventBusImpl implements EventBus {
         this.off(key, onceHandler);
       }
     };
-    
+
     return this.on(key, onceHandler);
   }
 
   off<T = any>(key: EventKey, handler: EventHandler<T>): void {
     if (!this.handlers.has(key)) return;
-    
+
     const handlers = this.handlers.get(key)!;
     handlers.delete(handler);
-    
+
     if (handlers.size === 0) {
       this.handlers.delete(key);
     }
   }
 
+  /**
+* Unsubscribes all handlers for a specific event, or all handlers
+* for all events (including wildcard handlers) if no key is provided.
+* @param key The event key to clear handlers for. If omitted, all handlers are cleared.
+*/
   offAll(key?: EventKey): void {
     if (key) {
       this.handlers.delete(key);
@@ -66,7 +71,7 @@ export class EventBusImpl implements EventBus {
   emit<T = any>(key: EventKey, payload?: T): void {
     if (this.handlers.has(key)) {
       const handlers = new Set(this.handlers.get(key));
-      
+
       handlers.forEach(handler => {
         try {
           handler(payload);
@@ -75,7 +80,7 @@ export class EventBusImpl implements EventBus {
         }
       });
     }
-    
+
     this.wildcardHandlers.forEach(handler => {
       try {
         handler(key, payload);
@@ -87,7 +92,7 @@ export class EventBusImpl implements EventBus {
 
   onAll(handler: WildcardEventHandler): () => void {
     this.wildcardHandlers.add(handler);
-    
+
     return () => {
       this.wildcardHandlers.delete(handler);
     };

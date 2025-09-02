@@ -6,7 +6,8 @@ export interface EventBus {
   on<T = any>(key: EventKey, handler: EventHandler<T>): () => void;
   once<T = any>(key: EventKey, handler: EventHandler<T>): () => void;
   off<T = any>(key: EventKey, handler: EventHandler<T>): void;
-  emit<T = any>(key: EventKey, payload?: T): void;
+  emit(key: EventKey): void;
+  emit<T>(key: EventKey, payload: T): void;
   offAll(key?: EventKey): void;
   all(): Map<EventKey, Set<EventHandler>>;
 }
